@@ -34,3 +34,17 @@ header {
     url('fonts/hvdsteinzeit_regular/hvd_steinzeit-webfont.svg#webfont')
       format('svg');
 }
+/* ==================== ATTEMPT BOX==================== */
+#attempt-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.canva {
+  background-color: #fff;
+  width: 40vmin;
+  height: 40vmin;
+}
+.guess {
+  font-size: 2vmin;
+}

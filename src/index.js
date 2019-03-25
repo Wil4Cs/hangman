@@ -4,17 +4,35 @@ import './index.css';
 
 class Game extends React.Component {
   render() {
-    return <TitleGame />;
+    return (
+      <div>
+        <header>
+          <TitleGame />
+        </header>
+        <section>
+          <Canva />
+        </section>
+      </div>
+    );
+  }
+}
+
+class Canva extends React.Component {
+  render() {
+    return (
+      <div id="attempt-box">
+        <canvas class="canva" width="400" height="400">
+          Votre navigateur ne supporte pas les balises canvas...
+        </canvas>
+        <p class="guess">Nombre de tantatives</p>
+      </div>
+    );
   }
 }
 
 class TitleGame extends React.Component {
   render() {
-    return (
-      <header>
-        <h1>Jeu du pendu</h1>
-      </header>
-    );
+    return <h1>Jeu du pendu</h1>;
   }
 }
 
