@@ -48,3 +48,14 @@ header {
 .guess {
   font-size: 2vmin;
 }
+/* ==================== MYSTERY WORD BOX ==================== */
+#mystery-word-box {
+  background-color: bisque;
+  display: flex;
+  justify-content: center;
+  padding: 2vmin 0 2vmin 0;
+}
+.mystery-letter {
+  margin: 0 0.5vmin 0vmin 0.5vmin;
+  font-size: 4vmin;
+}

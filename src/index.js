@@ -11,6 +11,7 @@ class Game extends React.Component {
         </header>
         <section>
           <Canva />
+          <MysteryWord />
         </section>
       </div>
     );
@@ -25,6 +26,22 @@ class Canva extends React.Component {
           Votre navigateur ne supporte pas les balises canvas...
         </canvas>
         <p class="guess">Nombre de tantatives</p>
+      </div>
+    );
+  }
+}
+
+class MysteryWord extends React.Component {
+  render() {
+    return (
+      <div id="mystery-word-box">
+        <div class="mystery-letter">M</div>
+        <div class="mystery-letter">Y</div>
+        <div class="mystery-letter">S</div>
+        <div class="mystery-letter">T</div>
+        <div class="mystery-letter">E</div>
+        <div class="mystery-letter">R</div>
+        <div class="mystery-letter">E</div>
       </div>
     );
   }
