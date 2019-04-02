@@ -23,66 +23,52 @@ class Canva extends React.Component {
   render() {
     return (
       <div id="attempt-box">
-        <canvas class="canva" width="400" height="400">
+        <canvas className="canva" width="400" height="400">
           Votre navigateur ne supporte pas les balises canvas...
         </canvas>
-        <p class="guess">Nombre de tantatives</p>
+        <p className="guess">Nombre de tentatives</p>
       </div>
     );
   }
 }
 
+function KeyboardKey(props) {
+  return <div className="key">{props.value}</div>;
+}
+
 class Keyboard extends React.Component {
+  renderKeyboardKey(arrayOfLetters) {
+    return arrayOfLetters.map((letter, index) => (
+      <KeyboardKey value={letter} key={index} />
+    ));
+  }
+
   render() {
+    const keysRow1 = Array.of('A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P');
+    const keysRow2 = Array.of('Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M');
+    const keysRow3 = Array.of('W', 'X', 'C', 'V', 'B', 'N');
+
     return (
       <div id="keyboard-box">
-        <div class="keyboard-row">
-          <div class="key">A</div>
-          <div class="key">B</div>
-          <div class="key">C</div>
-          <div class="key">D</div>
-          <div class="key">E</div>
-          <div class="key">F</div>
-          <div class="key">G</div>
-          <div class="key">H</div>
-          <div class="key">I</div>
-          <div class="key">J</div>
-          <div class="key">K</div>
-        </div>
-        <div class="keyboard-row">
-          <div class="key">L</div>
-          <div class="key">M</div>
-          <div class="key">N</div>
-          <div class="key">O</div>
-          <div class="key">P</div>
-          <div class="key">Q</div>
-          <div class="key">R</div>
-          <div class="key">S</div>
-          <div class="key">T</div>
-        </div>
-        <div class="keyboard-row">
-          <div class="key">U</div>
-          <div class="key">V</div>
-          <div class="key">W</div>
-          <div class="key">X</div>
-          <div class="key">Y</div>
-          <div class="key">Z</div>
-        </div>
+        <div className="keyboard-row">{this.renderKeyboardKey(keysRow1)}</div>
+        <div className="keyboard-row">{this.renderKeyboardKey(keysRow2)}</div>
+        <div className="keyboard-row">{this.renderKeyboardKey(keysRow3)}</div>
       </div>
     );
   }
 }
+
 class MysteryWord extends React.Component {
   render() {
     return (
       <div id="mystery-word-box">
-        <div class="mystery-letter">M</div>
-        <div class="mystery-letter">Y</div>
-        <div class="mystery-letter">S</div>
-        <div class="mystery-letter">T</div>
-        <div class="mystery-letter">E</div>
-        <div class="mystery-letter">R</div>
-        <div class="mystery-letter">E</div>
+        <div className="mystery-letter">M</div>
+        <div className="mystery-letter">Y</div>
+        <div className="mystery-letter">S</div>
+        <div className="mystery-letter">T</div>
+        <div className="mystery-letter">E</div>
+        <div className="mystery-letter">R</div>
+        <div className="mystery-letter">E</div>
       </div>
     );
   }
