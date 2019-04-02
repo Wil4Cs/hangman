@@ -79,9 +79,18 @@ function getRandomWord() {
 }
 
 class MysteryWord extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usedLetters: new Set(),
+      mysteryWord: getRandomWord()
+    };
+  }
+
   render() {
-    const randomWord = getRandomWord();
-    const computeWord = Array.from(computeDisplay(randomWord, new Set(['A'])));
+    const computeWord = Array.from(
+      computeDisplay(this.state.mysteryWord, this.state.usedLetters)
+    );
 
     return (
       <div id="mystery-word-box">
