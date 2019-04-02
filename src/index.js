@@ -39,7 +39,7 @@ function KeyboardKey(props) {
 class Keyboard extends React.Component {
   renderKeyboardKey(arrayOfLetters) {
     return arrayOfLetters.map((letter, index) => (
-      <KeyboardKey value={letter} key={index} />
+      <KeyboardKey value={letter} key={index.toString()} />
     ));
   }
 
@@ -58,17 +58,47 @@ class Keyboard extends React.Component {
   }
 }
 
+const FRUITS = ['POMME', 'BANANE', 'ANANAS'];
+
+function computeDisplay(phrase, usedLetters) {
+  return phrase.replace(/\w/g, letter =>
+    usedLetters.has(letter) ? letter : '_'
+  );
+}
+
+// get a random integer excluding the max number
+function getRandomInt(max, min = 0) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomWord() {
+  const randomInt = getRandomInt(FRUITS.length);
+  return FRUITS[randomInt].toUpperCase();
+}
+
 class MysteryWord extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usedLetters: new Set(),
+      mysteryWord: getRandomWord()
+    };
+  }
+
   render() {
+    const computeWord = Array.from(
+      computeDisplay(this.state.mysteryWord, this.state.usedLetters)
+    );
+
     return (
       <div id="mystery-word-box">
-        <div className="mystery-letter">M</div>
-        <div className="mystery-letter">Y</div>
-        <div className="mystery-letter">S</div>
-        <div className="mystery-letter">T</div>
-        <div className="mystery-letter">E</div>
-        <div className="mystery-letter">R</div>
-        <div className="mystery-letter">E</div>
+        {computeWord.map((letter, index) => (
+          <div className="mystery-letter" key={index.toString()}>
+            {letter}
+          </div>
+        ))}
       </div>
     );
   }
