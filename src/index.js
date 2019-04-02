@@ -39,7 +39,7 @@ function KeyboardKey(props) {
 class Keyboard extends React.Component {
   renderKeyboardKey(arrayOfLetters) {
     return arrayOfLetters.map((letter, index) => (
-      <KeyboardKey value={letter} key={index} />
+      <KeyboardKey value={letter} key={index.toString()} />
     ));
   }
 
@@ -59,16 +59,25 @@ class Keyboard extends React.Component {
 }
 
 class MysteryWord extends React.Component {
+  // get a random integer excluding the max number
+  getRandomInt(max, min = 0) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
   render() {
+    const randomInt = this.getRandomInt(FRUITS.length);
+    let randomWord = FRUITS[randomInt].toUpperCase();
+    randomWord = Array.from(randomWord);
+
     return (
       <div id="mystery-word-box">
-        <div className="mystery-letter">M</div>
-        <div className="mystery-letter">Y</div>
-        <div className="mystery-letter">S</div>
-        <div className="mystery-letter">T</div>
-        <div className="mystery-letter">E</div>
-        <div className="mystery-letter">R</div>
-        <div className="mystery-letter">E</div>
+        {randomWord.map((letter, index) => (
+          <div className="mystery-letter" key={index.toString()}>
+            {letter}
+          </div>
+        ))}
       </div>
     );
   }
@@ -79,5 +88,7 @@ class TitleGame extends React.Component {
     return <h1>Jeu du pendu</h1>;
   }
 }
+
+const FRUITS = ['POMME', 'BANANE'];
 
 ReactDOM.render(<Game />, document.getElementById('root'));
