@@ -58,22 +58,34 @@ class Keyboard extends React.Component {
   }
 }
 
-class MysteryWord extends React.Component {
-  // get a random integer excluding the max number
-  getRandomInt(max, min = 0) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+const FRUITS = ['POMME', 'BANANE', 'ANANAS'];
 
+function computeDisplay(phrase, usedLetters) {
+  return phrase.replace(/\w/g, letter =>
+    usedLetters.has(letter) ? letter : '_'
+  );
+}
+
+// get a random integer excluding the max number
+function getRandomInt(max, min = 0) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function getRandomWord() {
+  const randomInt = getRandomInt(FRUITS.length);
+  return FRUITS[randomInt].toUpperCase();
+}
+
+class MysteryWord extends React.Component {
   render() {
-    const randomInt = this.getRandomInt(FRUITS.length);
-    let randomWord = FRUITS[randomInt].toUpperCase();
-    randomWord = Array.from(randomWord);
+    const randomWord = getRandomWord();
+    const computeWord = Array.from(computeDisplay(randomWord, new Set(['A'])));
 
     return (
       <div id="mystery-word-box">
-        {randomWord.map((letter, index) => (
+        {computeWord.map((letter, index) => (
           <div className="mystery-letter" key={index.toString()}>
             {letter}
           </div>
@@ -88,7 +100,5 @@ class TitleGame extends React.Component {
     return <h1>Jeu du pendu</h1>;
   }
 }
-
-const FRUITS = ['POMME', 'BANANE'];
 
 ReactDOM.render(<Game />, document.getElementById('root'));
