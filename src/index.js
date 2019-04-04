@@ -7,14 +7,21 @@ class Game extends React.Component {
     super(props);
     this.state = {
       usedLetters: new Set(),
-      mysteryWord: getRandomWord()
+      mysteryWord: getRandomWord(),
+      attempts: 11
     };
   }
 
   handleClick(keyStroke) {
-    this.setState(prevState => ({
-      usedLetters: prevState.usedLetters.add(keyStroke)
-    }));
+    if (this.state.mysteryWord.includes(keyStroke)) {
+      this.setState(prevState => ({
+        usedLetters: prevState.usedLetters.add(keyStroke)
+      }));
+    } else {
+      this.setState(prevState => ({
+        attempts: prevState.attempts - 1
+      }));
+    }
   }
 
   render() {
@@ -24,7 +31,7 @@ class Game extends React.Component {
           <TitleGame />
         </header>
         <section>
-          <Canva />
+          <Canva attempts={this.state.attempts} />
           <MysteryWord
             mysteryWord={this.state.mysteryWord}
             usedLetters={this.state.usedLetters}
@@ -43,7 +50,9 @@ class Canva extends React.Component {
         <canvas className="canva" width="400" height="400">
           Votre navigateur ne supporte pas les balises canvas...
         </canvas>
-        <p className="guess">Nombre de tentatives</p>
+        <p className="guess">
+          Nombre de tentatives restantes : {this.props.attempts}
+        </p>
       </div>
     );
   }
