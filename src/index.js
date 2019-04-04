@@ -6,7 +6,8 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      usedLetters: new Set()
+      usedLetters: new Set(),
+      mysteryWord: getRandomWord()
     };
   }
 
@@ -24,7 +25,10 @@ class Game extends React.Component {
         </header>
         <section>
           <Canva />
-          <MysteryWord />
+          <MysteryWord
+            mysteryWord={this.state.mysteryWord}
+            usedLetters={this.state.usedLetters}
+          />
           <Keyboard onClick={keyStroke => this.handleClick(keyStroke)} />
         </section>
       </div>
@@ -100,17 +104,9 @@ function getRandomWord() {
 }
 
 class MysteryWord extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      usedLetters: new Set(),
-      mysteryWord: getRandomWord()
-    };
-  }
-
   render() {
     const computeWord = Array.from(
-      computeDisplay(this.state.mysteryWord, this.state.usedLetters)
+      computeDisplay(this.props.mysteryWord, this.props.usedLetters)
     );
 
     return (
