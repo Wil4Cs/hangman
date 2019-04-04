@@ -3,6 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      usedLetters: new Set()
+    };
+  }
+
+  handleClick(keyStroke) {
+    this.setState(prevState => ({
+      usedLetters: prevState.usedLetters.add(keyStroke)
+    }));
+  }
+
   render() {
     return (
       <div>
@@ -12,7 +25,7 @@ class Game extends React.Component {
         <section>
           <Canva />
           <MysteryWord />
-          <Keyboard />
+          <Keyboard onClick={keyStroke => this.handleClick(keyStroke)} />
         </section>
       </div>
     );
@@ -41,16 +54,12 @@ function KeyboardKey(props) {
 }
 
 class Keyboard extends React.Component {
-  handleClick(keyStroke) {
-    console.log(keyStroke);
-  }
-
   renderKeyboardKey(arrayOfLetters) {
     return arrayOfLetters.map((letter, index) => (
       <KeyboardKey
         value={letter}
         key={index.toString()}
-        onClick={() => this.handleClick(letter)}
+        onClick={() => this.props.onClick(letter)}
       />
     ));
   }
