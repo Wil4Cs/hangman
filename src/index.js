@@ -13,7 +13,9 @@ class Game extends React.Component {
   }
 
   handleClick(keyStroke) {
-    if (this.state.mysteryWord.includes(keyStroke)) {
+    const mysteryWord = this.state.mysteryWord;
+
+    if (mysteryWord.includes(keyStroke)) {
       this.setState(prevState => ({
         usedLetters: prevState.usedLetters.add(keyStroke)
       }));
@@ -25,17 +27,18 @@ class Game extends React.Component {
   }
 
   render() {
+    const mysteryWord = this.state.mysteryWord;
+    const usedLetters = this.state.usedLetters;
+    const attempts = this.state.attempts;
+
     return (
       <div>
         <header>
           <TitleGame />
         </header>
         <section>
-          <Canva attempts={this.state.attempts} />
-          <MysteryWord
-            mysteryWord={this.state.mysteryWord}
-            usedLetters={this.state.usedLetters}
-          />
+          <Canva attempts={attempts} />
+          <MysteryWord mysteryWord={mysteryWord} usedLetters={usedLetters} />
           <Keyboard onClick={keyStroke => this.handleClick(keyStroke)} />
         </section>
       </div>
@@ -112,22 +115,18 @@ function getRandomWord() {
   return FRUITS[randomInt].toUpperCase();
 }
 
-class MysteryWord extends React.Component {
-  render() {
-    const computeWord = Array.from(
-      computeDisplay(this.props.mysteryWord, this.props.usedLetters)
-    );
+function MysteryWord({ mysteryWord, usedLetters }) {
+  const computeWord = Array.from(computeDisplay(mysteryWord, usedLetters));
 
-    return (
-      <div id="mystery-word-box">
-        {computeWord.map((letter, index) => (
-          <div className="mystery-letter" key={index.toString()}>
-            {letter}
-          </div>
-        ))}
-      </div>
-    );
-  }
+  return (
+    <div id="mystery-word-box">
+      {computeWord.map((letter, index) => (
+        <div className="mystery-letter" key={index.toString()}>
+          {letter}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 class TitleGame extends React.Component {
