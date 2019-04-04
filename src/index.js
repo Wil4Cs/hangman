@@ -33,13 +33,25 @@ class Canva extends React.Component {
 }
 
 function KeyboardKey(props) {
-  return <div className="key">{props.value}</div>;
+  return (
+    <div className="key" onClick={props.onClick}>
+      {props.value}
+    </div>
+  );
 }
 
 class Keyboard extends React.Component {
+  handleClick(keyStroke) {
+    console.log(keyStroke);
+  }
+
   renderKeyboardKey(arrayOfLetters) {
     return arrayOfLetters.map((letter, index) => (
-      <KeyboardKey value={letter} key={index.toString()} />
+      <KeyboardKey
+        value={letter}
+        key={index.toString()}
+        onClick={() => this.handleClick(letter)}
+      />
     ));
   }
 
