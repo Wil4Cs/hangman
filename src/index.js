@@ -49,7 +49,10 @@ class Game extends React.Component {
             displayLetters={usedLetters}
             attempts={attempts}
           />
-          <Keyboard onClick={keyStroke => this.handleClick(keyStroke)} />
+          <Keyboard
+            usedKey={usedLetters}
+            onClick={keyStroke => this.handleClick(keyStroke)}
+          />
         </section>
       </div>
     );
@@ -88,15 +91,20 @@ class Canva extends React.Component {
   }
 }
 
-function KeyboardKey({ value, onClick }) {
+function KeyboardKey({ value, feedback, matchColor, onClick }) {
   return (
-    <div className="key" onClick={onClick}>
+    <button
+      type="button"
+      className={`key ${feedback}`}
+      disabled={feedback === 'press-deny' ? 'disabled' : null}
+      onClick={onClick}
+    >
       {value}
-    </div>
+    </button>
   );
 }
 
-function Keyboard({ onClick }) {
+function Keyboard({ usedKey, onClick }) {
   const keysRow1 = Array.of('A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P');
   const keysRow2 = Array.of('Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M');
   const keysRow3 = Array.of('W', 'X', 'C', 'V', 'B', 'N');
@@ -105,8 +113,9 @@ function Keyboard({ onClick }) {
     return arrayOfLetters.map((letter, index) => (
       <KeyboardKey
         value={letter}
-        key={index.toString()}
+        feedback={usedKey.has(letter) ? 'press-deny' : 'press-allow'}
         onClick={() => onClick(letter)}
+        key={index.toString()}
       />
     ));
   }
