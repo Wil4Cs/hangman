@@ -14,12 +14,17 @@ class Game extends React.Component {
 
   handleClick(keyStroke) {
     const mysteryWord = this.state.mysteryWord;
+    const usedLetters = this.state.usedLetters;
+    const attempts = this.state.attempts;
 
-    if (mysteryWord.includes(keyStroke)) {
-      this.setState(prevState => ({
-        usedLetters: prevState.usedLetters.add(keyStroke)
-      }));
-    } else {
+    // check if the game is over
+    if (attempts === 0 || checkForWin(mysteryWord, usedLetters)) return;
+    // add a letter to the set "usedLetters"
+    this.setState(prevState => ({
+      usedLetters: prevState.usedLetters.add(keyStroke)
+    }));
+    // decrease attempts if the mystery word doesn't contains keystroke
+    if (!mysteryWord.includes(keyStroke)) {
       this.setState(prevState => ({
         attempts: prevState.attempts - 1
       }));
@@ -30,6 +35,7 @@ class Game extends React.Component {
     const mysteryWord = this.state.mysteryWord;
     const usedLetters = this.state.usedLetters;
     const attempts = this.state.attempts;
+    const winner = checkForWin(mysteryWord, usedLetters);
 
     return (
       <div>
@@ -37,8 +43,12 @@ class Game extends React.Component {
           <TitleGame />
         </header>
         <section>
-          <Canva attempts={attempts} />
-          <MysteryWord mysteryWord={mysteryWord} usedLetters={usedLetters} />
+          <Canva attempts={attempts} wordWasFound={winner} />
+          <MysteryWord
+            mysteryWord={mysteryWord}
+            displayLetters={usedLetters}
+            attempts={attempts}
+          />
           <Keyboard onClick={keyStroke => this.handleClick(keyStroke)} />
         </section>
       </div>
@@ -46,16 +56,33 @@ class Game extends React.Component {
   }
 }
 
+function checkForWin(wordTocompare, setToCompare) {
+  // remove double letters by using a Set
+  wordTocompare = new Set([...wordTocompare]);
+  // check all letters in the word was aked by the user
+  for (let letter of wordTocompare) if (!setToCompare.has(letter)) return false;
+  return true;
+}
+
 class Canva extends React.Component {
   render() {
+    const attempts = this.props.attempts;
+    const wordWasFound = this.props.wordWasFound;
+    let status;
+    if (attempts === 0) {
+      status = 'Dommage... Le mot mystère était le suivant :';
+    } else if (wordWasFound) {
+      status = 'Félicitations !!! Vous avez gagné !';
+    } else {
+      status = 'Nombre de tentatives restantes : ' + attempts;
+    }
+
     return (
       <div id="attempt-box">
         <canvas className="canva" width="400" height="400">
           Votre navigateur ne supporte pas les balises canvas...
         </canvas>
-        <p className="guess">
-          Nombre de tentatives restantes : {this.props.attempts}
-        </p>
+        <p className="guess">{status}</p>
       </div>
     );
   }
@@ -95,6 +122,7 @@ function Keyboard({ onClick }) {
 
 const FRUITS = ['POMME', 'BANANE', 'ANANAS'];
 
+// replace letters not found in the word with underscores
 function computeDisplay(phrase, usedLetters) {
   return phrase.replace(/\w/g, letter =>
     usedLetters.has(letter) ? letter : '_'
@@ -108,17 +136,23 @@ function getRandomInt(max, min = 0) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+// return a random word in upper case
 function getRandomWord() {
   const randomInt = getRandomInt(FRUITS.length);
   return FRUITS[randomInt].toUpperCase();
 }
 
-function MysteryWord({ mysteryWord, usedLetters }) {
-  const computeWord = Array.from(computeDisplay(mysteryWord, usedLetters));
+function MysteryWord({ mysteryWord, displayLetters, attempts }) {
+  // check if user lost and whatever, change the word from string to an array
+  if (attempts === 0) {
+    mysteryWord = [...mysteryWord];
+  } else {
+    mysteryWord = Array.from(computeDisplay(mysteryWord, displayLetters));
+  }
 
   return (
     <div id="mystery-word-box">
-      {computeWord.map((letter, index) => (
+      {mysteryWord.map((letter, index) => (
         <div className="mystery-letter" key={index.toString()}>
           {letter}
         </div>
