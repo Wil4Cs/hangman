@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+const maxAttempt = 11;
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
+    this.resetClick = this.resetClick.bind(this);
     this.state = {
       usedLetters: new Set(),
       mysteryWord: getRandomWord(),
-      attempts: 11
+      attempts: maxAttempt
     };
   }
 
@@ -31,11 +34,19 @@ class Game extends React.Component {
     }
   }
 
+  resetClick() {
+    this.setState({ attempts: maxAttempt });
+    this.setState({ usedLetters: new Set() });
+    this.setState({ mysteryWord: getRandomWord() });
+    this.setState({ showKeyboard: true });
+  }
+
   render() {
     const mysteryWord = this.state.mysteryWord;
     const usedLetters = this.state.usedLetters;
     const attempts = this.state.attempts;
     const winner = checkForWin(mysteryWord, usedLetters);
+    const endGame = winner === true || attempts === 0 ? true : false;
 
     return (
       <div>
@@ -49,10 +60,19 @@ class Game extends React.Component {
             displayLetters={usedLetters}
             attempts={attempts}
           />
-          <Keyboard
-            usedKey={usedLetters}
-            onClick={keyStroke => this.handleClick(keyStroke)}
-          />
+          {endGame && (
+            <div id="btn-box">
+              <button type="button" className="btn" onClick={this.resetClick}>
+                Continuer
+              </button>
+            </div>
+          )}
+          {!endGame && (
+            <Keyboard
+              usedKey={usedLetters}
+              onClick={keyStroke => this.handleClick(keyStroke)}
+            />
+          )}
         </section>
       </div>
     );
@@ -104,7 +124,7 @@ function KeyboardKey({ value, feedback, matchColor, onClick }) {
   );
 }
 
-function Keyboard({ usedKey, onClick }) {
+function Keyboard({ shouldNotDisplay, usedKey, onClick }) {
   const keysRow1 = Array.of('A', 'Z', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P');
   const keysRow2 = Array.of('Q', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M');
   const keysRow3 = Array.of('W', 'X', 'C', 'V', 'B', 'N');
