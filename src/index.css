@@ -41,7 +41,13 @@ header {
   align-items: center;
 }
 .canva {
-  background-color: #fff;
+  /* background-color: #fff; */
+  background-image: linear-gradient(
+    rgb(168, 218, 252),
+    rgb(255, 255, 255),
+    rgb(255, 255, 255)
+  );
+  border-radius: 2rem;
   width: 40vmin;
   height: 40vmin;
 }
@@ -50,7 +56,6 @@ header {
 }
 /* ==================== MYSTERY WORD BOX ==================== */
 #mystery-word-box {
-  background-color: bisque;
   display: flex;
   justify-content: center;
   padding: 2vmin 0 2vmin 0;
