@@ -2,6 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+// Fill an array with all letters of the alphabet
+const alphabetKeys = Array(26)
+  .fill(1)
+  .map((_, i) => String.fromCharCode(65 + i));
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -11,17 +16,38 @@ class Game extends React.Component {
       mysteryWord: getRandomWord(),
       attempts: maxAttempt
     };
+    this.handleKeyPress = this.handleKeyPress.bind(this);
   }
 
-  handleClick(keyStroke) {
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress);
+  }
+
+  handleClick(clickedKey) {
+    this.updateState(clickedKey);
+  }
+
+  handleKeyPress(event) {
+    const key = event.key.toUpperCase();
+    const usedLetters = this.state.usedLetters;
+    // check that the key pressed corresponds to a letter of the alphabet and was not tested yet
+    if (!alphabetKeys.includes(key) || usedLetters.has(key)) return;
+    this.updateState(event.key.toUpperCase());
+  }
+
+  updateState(key) {
     const mysteryWord = this.state.mysteryWord;
 
-    // add a letter to the set "usedLetters"
+    // add a letter to the set "usedLetters" when pressed or clicked
     this.setState(prevState => ({
-      usedLetters: prevState.usedLetters.add(keyStroke)
+      usedLetters: prevState.usedLetters.add(key)
     }));
-    // decrease attempts if the mystery word doesn't contains keystroke
-    if (!mysteryWord.includes(keyStroke)) {
+    // decrease attempts if the mystery word doesn't contains the letter
+    if (!mysteryWord.includes(key)) {
       this.setState(prevState => ({
         attempts: prevState.attempts - 1
       }));
@@ -64,7 +90,7 @@ class Game extends React.Component {
           {!endGame && (
             <Keyboard
               usedKey={usedLetters}
-              onClick={keyStroke => this.handleClick(keyStroke)}
+              onClick={clickedKey => this.handleClick(clickedKey)}
             />
           )}
         </section>
