@@ -271,7 +271,7 @@ function step11(ctx) {
   ctx.quadraticCurveTo(261, 125, 257, 110);
   ctx.fill();
 }
-function draw(ctx, step) {
+function drawTheHangman(ctx, step) {
   switch (step) {
     case 9:
       step2(ctx);
@@ -308,37 +308,55 @@ function draw(ctx, step) {
       break;
   }
 }
+function happyEnd(ctx) {
+  const imageName = require('./happy-buddy.png');
+  const img = new Image();
+  img.src = imageName;
+  img.onload = () => {
+    ctx.drawImage(img, 50, 50, 300, 300);
+  };
+}
 
 const maxAttempt = 10;
 
 class Canva extends React.Component {
   componentDidMount() {
-    const ctx = this.refs.canvas.getContext('2d');
-    draw(ctx, this.props.attempts);
+    this.drawTheCanvas();
   }
 
   componentDidUpdate() {
-    this.drawTheHangman();
+    this.drawTheCanvas();
   }
 
   shouldComponentUpdate(nextProps) {
-    let shouldUpdate = false;
-    if (nextProps.wordWasFound) shouldUpdate = true;
-    if (nextProps.attempts !== this.props.attempts) shouldUpdate = true;
-    return shouldUpdate;
+    const failedAttempt = nextProps.attempts !== this.props.attempts;
+    const wordWillBeFound = nextProps.wordWasFound;
+    const restartGame = this.props.wordWasFound;
+    if (wordWillBeFound || restartGame || failedAttempt) return true;
+    return false;
   }
 
-  drawTheHangman() {
+  eraseCanvas(ctx) {
+    ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
+  }
+
+  drawTheCanvas() {
     const ctx = this.refs.canvas.getContext('2d');
-    // leave out this function if the word has been found
-    if (this.props.wordWasFound) {
-      return;
-    }
+    const wordWasFound = this.props.wordWasFound;
+    let stepNumber = this.props.attempts;
+
     // erase the drawing of the canva for a new game
-    if (this.props.attempts === maxAttempt) {
-      ctx.clearRect(0, 0, 400, 400);
+    if (stepNumber === maxAttempt || wordWasFound) {
+      this.eraseCanvas(ctx);
     }
-    draw(ctx, this.props.attempts);
+
+    // draws a happy persona if the word has been found
+    if (wordWasFound) {
+      stepNumber = maxAttempt;
+      happyEnd(ctx);
+    }
+
+    drawTheHangman(ctx, stepNumber);
   }
 
   render() {
