@@ -7,16 +7,25 @@ const alphabetKeys = Array(26)
   .fill(1)
   .map((_, i) => String.fromCharCode(65 + i));
 
+const fillArrayWith = value => Array.from(value);
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.resetClick = this.resetClick.bind(this);
     this.state = {
       usedLetters: new Set(),
-      mysteryWord: getRandomWord(),
+      mysteryWord: '',
+      allWords: [],
       attempts: maxAttempt
     };
     this.handleKeyPress = this.handleKeyPress.bind(this);
+  }
+
+  componentWillMount() {
+    const arrayOfWords = fillArrayWith(FRUITS);
+    this.setState({ allWords: arrayOfWords });
+    this.setState({ mysteryWord: getRandomWord(arrayOfWords) });
   }
 
   componentDidMount() {
@@ -55,9 +64,20 @@ class Game extends React.Component {
   }
 
   resetClick() {
+    const WORD_POSITION = this.state.allWords.indexOf(this.state.mysteryWord);
+    const NEW_WORDS = this.state.allWords;
+    // delete the mystery word from the array of allWords
+    NEW_WORDS.splice(WORD_POSITION, 1);
+    this.setState({ allWords: NEW_WORDS });
     this.setState({ attempts: maxAttempt });
     this.setState({ usedLetters: new Set() });
-    this.setState({ mysteryWord: getRandomWord() });
+    if (this.state.allWords.length === 0) {
+      const arrayOfWords = fillArrayWith(FRUITS);
+      this.setState({ allWords: arrayOfWords });
+      this.setState({ mysteryWord: getRandomWord(arrayOfWords) });
+    } else {
+      this.setState({ mysteryWord: getRandomWord(this.state.allWords) });
+    }
   }
 
   render() {
@@ -65,7 +85,7 @@ class Game extends React.Component {
     const usedLetters = this.state.usedLetters;
     const attempts = this.state.attempts;
     const winner = checkForWin(mysteryWord, usedLetters);
-    // Use this variable to display The Keyboard component or a button instead
+    // Use this constant to display The Keyboard component or a button instead
     const endGame = winner === true || attempts === 0 ? true : false;
 
     return (
@@ -437,9 +457,9 @@ function getRandomInt(max, min = 0) {
 }
 
 // return a random word in upper case
-function getRandomWord() {
-  const randomInt = getRandomInt(FRUITS.length);
-  return FRUITS[randomInt].toUpperCase();
+function getRandomWord(words) {
+  const randomInt = getRandomInt(words.length);
+  return words[randomInt].toUpperCase();
 }
 
 function MysteryWord({ mysteryWord, displayLetters, attempts }) {
