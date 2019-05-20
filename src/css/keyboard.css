@@ -1,0 +1,8 @@
+/* ==================== KEYBOARD BOX ==================== */
+#keyboard-box {
+  padding: 4vmin 0 4vmin 0;
+}
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+}
